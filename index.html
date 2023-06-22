@@ -12,14 +12,26 @@
 </head>
 
 <body>
-    <div class="divEsq">
+    <div class="divEsquerda">
         <div class="divImg"><img
                 src="https://images.pexels.com/photos/1524620/pexels-photo-1524620.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1"
                 alt=""></div>
     </div>
-    <div class="divDir">
+    <div class="divDireita">
+        <div id="div_historia">
+            <h1>Turfe</h1>
+            <p>O turfe, da forma em que é conhecido hoje, surgiu na Inglaterra, por volta do século
+                XVII.
+                Para as competições, foram sendo selecionados cavalos com aptidão para corridas,
+                incluindo animais trazidos do norte da África das raças berbere e árabe, que eram
+                comprados ou tomados em batalhas.
+                Cruzados com os melhores cavalos europeus, surgiu o cavalo puro sangue inglês de
+                corrida, que praticamente domina a atividade turfística.</p>
+            <cite>Fonte: Wikipédia</cite>
+        </div>
         <div id="div_qtd_cavalos" class="divMeio">
-            Digite a quantidade de cavalos<input type="number" id="ipt_qtd_cavalos" />
+            Digite a quantidade de cavalos:
+            <input type="number" id="ipt_qtd_cavalos" />
             <button onclick="pegarQtdCavalo()">Próximo</button>
         </div>
 
@@ -28,13 +40,24 @@
             <button onclick="cadastrar()">Próximo</button>
         </div>
 
-        <div id="div_voltas" class="divMeio">
-            Digite a quantidade de voltas
+        <div id="div_qtd_voltas" class="divMeio">
+            Digite a quantidade de voltas:
             <input type="number" id="ipt_voltas" />
-            <button onclick="corrida()">Corrida</button>
+            <button onclick="correr()">Correr</button>
         </div>
 
-        <div id="div_msg"></div>
+        <div id="div_voltas" class="telaFinal">
+            <div id="div_msg"></div>
+            <div id="div_grafico"></div>
+            <button id="btn_proximaVolta" onclick="corrida()">Próxima Volta</button>
+        </div>
+
+        <!-- encerramento do projeto -->
+        <div id="div_fim"> 
+            <div id="primeiroLugar"></div>
+            <div id="segundoLugar"></div>
+            <div id="terceiroLugar"></div>
+        </div>
     </div>
 </body>
 
@@ -45,34 +68,37 @@
         tmpTotal: [],
     };
 
-    // DEFINIR JSON CAVALO PARA REFERENCIAR DEPOIS
+    var podio = {
+        idCavalo: [],
+        posicoes: [],
+        tmp: [],
+    }
 
     var erro = false;
 
     div_cavalos.style.display = 'none';
+    div_qtd_voltas.style.display = 'none';
     div_voltas.style.display = 'none';
+    div_grafico.style.display = 'none';
 
-    function validacoes(qtdCavalo = 5, nomeCavalo = 'sergio', qtdVoltas = 1) { // cada parametro tem um valor padrao, para usar a funcao validacao use
-
+    function validacoes(qtdCavalo = 5, nomeCavalo = 'sergio', qtdVoltas = 1) {
+        erro = false;
 
         if (qtdCavalo < 2 || qtdCavalo > 6) {
-            erro = true;
-
             alert('A quantidade de cavalos precisar estar entre dois e seis!');
+            erro = true;
         }
 
         if (nomeCavalo == '') {
-            erro = true;
-
             alert('O nome do cavalo não pode estar vazio');
+            erro = true;
         }
 
         if (qtdVoltas <= 0) {
-            erro = true;
-
             alert('A quantidade de voltas precisa ser maior do que zero!')
+            erro = true;
         }
-    } // pega todos os inputs e valida, se der erro a variavel 'erro' fica igual a true
+    }
 
     function pegarQtdCavalo() {
         var qtdCavalo = ipt_qtd_cavalos.value;
@@ -86,7 +112,7 @@
 
             p_nome_cavalo.innerHTML = `Digite o nome do cavalo `;
         }
-    } // se não houverem erros pega o valor do input e da um .push() no array
+    }
 
     function cadastrar() {
         var qtdCavalo = ipt_qtd_cavalos.value;
@@ -97,144 +123,90 @@
         if (erro == false) {
             if (cavalos.nome.length < qtdCavalo - 1) {
                 cavalos.nome.push(nomeCavalo);
+                ipt_nome_cavalos.value = '';
             } else {
                 cavalos.nome.push(nomeCavalo);
                 div_cavalos.style.display = 'none';
-                div_voltas.style.display = 'flex';
+                div_qtd_voltas.style.display = 'flex';
             }
             p_nome_cavalo.innerHTML = `Digite o nome do cavalo ${cavalos.nome.length + 1}`;
         }
     }
 
+    function correr() {
+        div_qtd_voltas.style.display = 'none';
+        div_voltas.style.display = 'flex';
+        corrida();
+    }
     var volta = 1
 
     function corrida() {
-
         var qtdCavalo = ipt_qtd_cavalos.value;
         var nomeCavalo = ipt_nome_cavalos.value;
-        var qtdCavalo = ipt_qtd_cavalos.value; // ESSA É A QUANTIDADE DE CAVALOS
+        var qtdCavalo = ipt_qtd_cavalos.value;
         var qtdVoltas = ipt_voltas.value;
-        var menorTempo = 10; // ESSE É O MENOR TEMPO, ELE ESTÁ IGUAL A 10 PORQUE É MAIOR QUE 0
-        var nCavalo = 0; // NÚMERO DO CAVALO COM O MENOR TEMPO
-
-
+        var nCavalo = 0;
 
         validacoes(ipt_nome_cavalos, qtdCavalo, qtdVoltas);
 
         if (erro == false) {
 
             if (volta <= qtdVoltas) {
-                div_msg.innerHTML += `<h1>Volta ${volta}</h1>`
+                div_msg.innerHTML = `<h1>Volta ${volta}</h1>`
+
                 volta++
 
                 for (i = 0; i < cavalos.nome.length; i++) {
                     var aleatorio = Math.random() * 2 + 7;
 
                     if (cavalos.tmpTotal[i] != undefined) {
-                        cavalos.tmpTotal[i] += aleatorio;
+                        cavalos.tmpTotal[i] = aleatorio + cavalos.tmpTotal[i];
                     } else {
-                        cavalos.tmpTotal.push(aleatorio);
+                        cavalos.tmpTotal[i] = aleatorio;
+                    }
+                }
+
+                div_grafico.innerHTML = "";
+
+                podio.posicoes.length = 0
+                podio.idCavalo.length = 0
+
+                for (c = 0; c < cavalos.tmpTotal.length; c++) {
+                    podio.tmp[c] = cavalos.tmpTotal[c];
+                    console.log(`podio  ${podio.tmp}`);
+                }
+
+                for (let j = 0; j < podio.tmp.length; j++) {
+                    var menorTempo = 100;
+                    var idCavalo = 0;
+
+                    for (let y = 0; y < podio.tmp.length; y++) {
+                        if (podio.tmp[y] < menorTempo) {
+                            menorTempo = podio.tmp[y];
+                            idCavalo = y;
+                        }
                     }
 
-                    div_msg.innerHTML += `<br>Cavalo ${cavalos.nome[i]} - ${aleatorio.toFixed(2)} - ${cavalos.tmpTotal[i].toFixed(2)}`
-
-                    console.log('a')
-                }
-            }
-        }
-    }
-
-
-
-
-
-
-
-
-
-
-    /* function corrida() {
-        var qtdCavalo = ipt_qtd_cavalos.value;
-        var nomeCavalo = ipt_nome_cavalos.value;
-        var qtdCavalo = ipt_qtd_cavalos.value; // ESSA É A QUANTIDADE DE CAVALOS
-        var qtdVoltas = ipt_voltas.value;
-        var menorTempo = 10; // ESSE É O MENOR TEMPO, ELE ESTÁ IGUAL A 10 PORQUE É MAIOR QUE 0
-        var nCavalo = 0; // NÚMERO DO CAVALO COM O MENOR TEMPO
-
-        validacoes(ipt_nome_cavalos, qtdCavalo, qtdVoltas);
-
-        if (erro == false) {
-            for (var y = 1; y <= qtdVoltas; y++) {
-                console.log('a')
-                // QUANTIDADE DE VOLTAS
-                if (y == qtdVoltas) {
-                    alert(`<h1><br> Cavalo vencedor ${nCavalo}</h1>`);
-                } else {
-                    alert(`<h1> Volta ${y}</h1><br>`);
-                    for (var i = 0; i < qtdCavalo; i++) {
-                        // SORTEAR O TEMPO PARA CADA CAVALO
-                        var aleatorio = Math.random() * 2 + 7;
-                        console.log(cavalos.tmpTotal);
-
-                        if (cavalos.tmpTotal[i] != undefined) {
-                            cavalos.tmpTotal[i] = tmpTotal[i] + aleatorio;
-                        } else {
-                            cavalos.tempTotal.push(aleatorio);
-                        }
-
-                        alert(`Cavalo ${i} - ${aleatorio.toFixed(2)} - ${cavalos.tmpTotal[i].toFixed(2)}`);
-
-                        if (aleatorio < menorTempo) {
-                            // PEGAR O MENOR TEMPO
-                            menorTempo = aleatorio;
-                            nCavalo = i;
-                        }
-
-                        console.log(`a`);
+                    if (menorTempo < 100) {
+                        podio.posicoes.push(menorTempo);
+                        podio.idCavalo.push(idCavalo);
                     }
 
-                    div_msg.innerHTML += ``;
+                    delete podio.tmp[podio.tmp.indexOf(menorTempo)];
+
+                    if (podio.posicoes[j] != undefined) {
+                        div_grafico.innerHTML += `<div class="linha">Tempo: ${podio.posicoes[j].toFixed(2)}- Id: ${podio.idCavalo[j]} - Posição ${j + 1}°</div>`
+                    }
                 }
+
+                div_grafico.innerHTML += `<p>Diferença ${(podio.posicoes[0] - podio.posicoes[1]).toFixed(2)}</p>`;
+                div_grafico.innerHTML += `<p>Podio 1°: ${cavalos.nome[podio.idCavalo[0]]} - 2°: ${cavalos.nome[podio.idCavalo[1]]} - 3°: ${cavalos.nome[podio.idCavalo[2]]}</p>`;
             }
+
+            div_qtd_voltas.style.display = 'none';
+            div_grafico.style.display = 'flex';
         }
-    } */ // pegar a quantidade de voltas e realizar o turfe
-
-    function resultado() { } // pegar o array de tempo total e decidir o podio, mostrar as divs de resumo e corrida, varrer o array três vezes e pegar os três menores tempo.
-
-    /* function validacao() {
-
-        var qtdCavalos = ipt_qtd_cavalos.value;
-        var nomeCavalo = ipt_cavalos.value;
-        
-
-        if (qtdCavalos <= 0) {
-            erro = true;
-            consolte.log('Favor inserir mais de um cavalo');
-        }
-
-        if (qtdCavalos > 5) {
-            erro = true;
-            console.log('A corrida pode ter no máximo 5 cavalos');
-        }
-
-
-
     }
 
-    function registrarCavalos() {
-
-        validacao()
-        if (erro == false) {
-
-            let qtdCavalosCadastrados = 0;
-
-            for (i = 0; i < qtdCavalos; i++) {
-                if (qtdCavalos > 0) {
-                    nomeCavaloX.innerHTML = `Insira o nome do cavalo ${i}`
-                }
-            }
-        }
-    }
- */
-    /*  */
+    // PRECISAMOS FINALIZAR ESSA PARTE DO PROJETO: Encerramento do Turfe – Dê um encerramento elegante para o Turfe Amigo, mostre uma nova página, tenha nessa página três imagens de cavalo, uma para cada cavalo do podium. Apresente o resultado de cada cavalo, da última volta para a primeira. De alguma forma dê destaque ao cavalo campeão.  
 </script>
