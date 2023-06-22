@@ -15,7 +15,6 @@ input {
     height: 9%;
     margin-bottom: 2%;
     background-color: rgba(255, 255, 255, 0.4);
-
     border: solid 1px;
     border-radius: 10px;
 }
@@ -46,6 +45,23 @@ button {
     z-index: 0;
 }
 
+.imgCavalos {
+    height: 150px;
+    width: 150px;
+}
+
+.selected {
+    border: 2px solid #a3b18a;
+}
+
+.divImagens {
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+}
+
 .divDireita {
     width: 60%;
     height: 100vh;
@@ -58,23 +74,36 @@ button {
     box-shadow: -10px -10px 24px 17px #a3b18a;
 }
 
+#div_historia {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+    height: 80%;
+    gap: 50px;
+}
+
+#div_historia h1 {
+    font-size: 50px;
+}
+
 .divMeio {
     display: flex;
-    height: 40%;
-    width: 40%;
+    height: 60%;
+    width: 80%;
     flex-direction: column;
     background-color: #DAD7CD;
     border-radius: 10px;
     padding: 20px;
     align-items: center;
     justify-content: center;
-    overflow: scroll;
+    overflow: auto;
     box-shadow: 15px 15px 24px #a3b18a;
 }
 
 .telaFinal {
     display: flex;
-    height: 40%;
+    height: 80%;
     width: 80%;
     flex-direction: column;
     background-color: #DAD7CD;
@@ -82,17 +111,18 @@ button {
     padding: 20px;
     align-items: center;
     justify-content: center;
-    overflow: scroll;
+    overflow: auto;
+    gap: 20px;
     box-shadow: 15px 15px 24px #a3b18a;
 
 }
 
 #div_grafico {
+    height: auto;
     width: 80%;
     height: fit-content;
     padding: 5%;
-    background-color: rgb(13, 150, 13);
-
+    background-color: rgb(81, 199, 81);
     display: flex;
     flex-direction: column;
     justify-content: space-around;
@@ -100,16 +130,68 @@ button {
 }
 
 .linha {
-    height: 5px;
+    text-align: center;
+    height: 200px;
     width: 90%;
-
-    margin-bottom: 5%;
-
+    margin-bottom: 10%;
     display: flex;
-    justify-content: flex-end;
-    background-color: rgb(10, 71, 10);
+    justify-content: space-around;
+    flex-direction: column;
+    align-items: center;
+    gap: 20px;
+}
+.divLinha{
+    width: 100%;
+    position: relative;
+}
+.divLinha .imgCavalos {
+    height: 150px;
+    width: 150px;
+    position: absolute;
+    right: -100px;
+    top: -70px;
+}
+hr{
+    width: 100%;
+    height: 5px;
+    background-color: #602800;
+    border: none;
 }
 
-#primeiroLugar {
-    
+.botaoInicio {
+    width: 300px;
+    height: 60px;
+    font-family: 'Nunito', sans-serif;
+    font-size: 22px;
+    letter-spacing: 1.3px;
+    font-weight: 700;
+    color: rgb(255, 223, 172);
+    background-image: linear-gradient(90deg, #a86241 0, #a3553c 16.67%, #984132 33.33%, #882525 50%, #77001b 66.67%, #6a0017 83.33%, #620017 100%);
+    border: none;
+    border-radius: 1000px;
+    box-shadow: 12px 12px 24px rgba(209, 140, 79, 0.64);
+    transition: all 0.3s ease-in-out 0s;
+    cursor: pointer;
+    position: relative;
+    padding: 10px;
+}
+.botaoInicio::before {
+    content: '';
+    border-radius: 1000px;
+    min-width: calc(300px + 12px);
+    min-height: calc(60px + 12px);
+    border: 6px solid #602800;
+    box-shadow: 0 0 60px rgba(82, 59, 2, 0.64);
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    opacity: 0;
+    transition: all .3s ease-in-out 0s;
+}
+.botaoInicio:hover{
+    transform: translateY(-6px);
+}
+.botaoInicio:hover::before {
+    opacity: 1;
 }

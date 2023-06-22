@@ -1,0 +1,313 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Cavalo</title>
+    <Link rel="stylesheet" href="style.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Ubuntu:wght@300;500;700&display=swap" rel="stylesheet">
+</head>
+
+<body>
+    <div class="divEsquerda">
+        <div class="divImg"><img
+                src="https://images.pexels.com/photos/1524620/pexels-photo-1524620.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1"
+                alt=""></div>
+    </div>
+    <div class="divDireita">
+        <div id="div_historia">
+            <div>
+                <h1>Turfe</h1>
+                <p>O turfe, da forma em que é conhecido hoje, surgiu na Inglaterra, por volta do século
+                    XVII.
+                    Para as competições, foram sendo selecionados cavalos com aptidão para corridas,
+                    incluindo animais trazidos do norte da África das raças berbere e árabe, que eram
+                    comprados ou tomados em batalhas.
+                    Cruzados com os melhores cavalos europeus, surgiu o cavalo puro sangue inglês de
+                    corrida, que praticamente domina a atividade turfística.</p>
+                <cite>Fonte: Wikipédia</cite>
+            </div>
+            <h2>Clique no botão abaixo para começar a corrida</h2>
+            <button class="botaoInicio" onclick="proxTela()">COMEÇAR</button>
+        </div>
+        <div style="display: none;" id="div_qtd_cavalos" class="divMeio">
+            Digite a quantidade de cavalos:
+            <input type="number" id="ipt_qtd_cavalos" />
+            <button onclick="pegarQtdCavalo()">Próximo</button>
+        </div>
+
+        <div id="div_cavalos" class="divMeio">
+            <p id="p_nome_cavalo"></p><input type="text" id="ipt_nome_cavalos" />
+            <div class="divImagens">
+                <h2>Selecione o seu Cavalo</h2>
+                <div>
+                    <img src="img/cavaloMarrom.png" class="imgCavalos" onclick="selectHorse(this,'cavaloMarrom.png')">
+                    <img src="img/cavaloPreto.png" class="imgCavalos" onclick="selectHorse(this,'cavaloPreto.png')">
+                    <img src="img/cavaloCinza.png" class="imgCavalos" onclick="selectHorse(this,'cavaloCinza.png')">
+                </div>
+                <div>
+                    <img src="img/cavaloMalhado.png" class="imgCavalos" onclick="selectHorse(this,'cavaloMalhado.png')">
+                    <img src="img/cavaloBranco.png" class="imgCavalos" onclick="selectHorse(this,'cavaloBranco.png')">
+                    <img src="img/cavaloLaranja.png" class="imgCavalos" onclick="selectHorse(this,'cavaloLaranja.png')">
+                </div>
+            </div>
+            <button onclick="cadastrar()">Próximo</button>
+        </div>
+
+        <div id="div_qtd_voltas" class="divMeio">
+            Digite a quantidade de voltas:
+            <input type="number" id="ipt_voltas" />
+            <button onclick="correr()">Correr</button>
+        </div>
+
+        <div id="div_voltas" class="telaFinal">
+            <div id="div_msg"></div>
+            <div id="div_grafico"></div>
+            <button id="btn_proximaVolta" onclick="corrida()">Próxima Volta</button>
+        </div>
+
+        <!-- encerramento do projeto -->
+        <div id="div_fim">
+        </div>
+    </div>
+</body>
+
+</html>
+<script>
+    var cavalos = {
+        nome: [],
+        tmpTotal: [],
+        tipo: [],
+    };
+
+    var cav1 = [];
+    var cav2 = [];
+    var cav3 = [];
+    var cav4 = [];
+    var cav5 = [];
+    var cav6 = [];
+
+    var podio = {
+        idCavalo: [],
+        posicoes: [],
+        tmp: [],
+    }
+
+
+    let selectedHorse = null;
+    var imgCavalo = '';
+
+    function proxTela() {
+        div_historia.style.display = 'none'
+        div_qtd_cavalos.style.display = 'flex'
+    }
+
+    var erro = false;
+
+    div_cavalos.style.display = 'none';
+    div_qtd_voltas.style.display = 'none';
+    div_voltas.style.display = 'none';
+    div_grafico.style.display = 'none';
+
+    function validacoes(qtdCavalo = 5, nomeCavalo = 'sergio', qtdVoltas = 1) {
+        erro = false;
+
+        if (qtdCavalo < 2 || qtdCavalo > 6) {
+            alert('A quantidade de cavalos precisar estar entre dois e seis!');
+            erro = true;
+        }
+
+        if (nomeCavalo == '') {
+            alert('O nome do cavalo não pode estar vazio');
+            erro = true;
+        }
+
+        if (qtdVoltas <= 0) {
+            alert('A quantidade de voltas precisa ser maior do que zero!')
+            erro = true;
+        }
+    }
+
+    function pegarQtdCavalo() {
+        var qtdCavalo = ipt_qtd_cavalos.value;
+        var nomeCavalo = ipt_nome_cavalos.value;
+
+        validacoes(qtdCavalo);
+
+        if (erro == false) {
+            div_cavalos.style.display = 'flex';
+            div_qtd_cavalos.style.display = 'none';
+
+            p_nome_cavalo.innerHTML = `Digite o nome do cavalo `;
+        }
+    }
+
+    function selectHorse(imagem, tipo) {
+
+        //A primeira verificação if verifica se já há um cavalo selecionado (selectedHorse). Se sim, remove a classe selected do cavalo anteriormente selecionado
+        if (selectedHorse) {
+            selectedHorse.classList.remove('selected');
+        }
+        imgCavalo = tipo;/*falo que essa variavel vai receber o nome da minha img q esta sendo passado no parametro 'tipo'*/
+        imagem.classList.add('selected');
+        selectedHorse = imagem;
+    }
+
+    function cadastrar() {
+        var qtdCavalo = ipt_qtd_cavalos.value;
+        var nomeCavalo = ipt_nome_cavalos.value;
+
+        validacoes(qtdCavalo, nomeCavalo);
+
+        if (imgCavalo == '' || selectHorse == null) {
+            erro = true
+            alert('Selecione o seu cavalo')
+        }
+
+        if (erro == false) {
+
+            cavalos.tipo.push(imgCavalo);
+            selectedHorse.remove();
+            selectedHorse = null;
+            imgCavalo = ''
+            ipt_nome_cavalos.value = '';
+
+            if (cavalos.nome.length < qtdCavalo - 1) {
+                cavalos.nome.push(nomeCavalo);
+            } else {
+                cavalos.nome.push(nomeCavalo);
+                div_cavalos.style.display = 'none';
+                div_qtd_voltas.style.display = 'flex';
+            }
+            p_nome_cavalo.innerHTML = `Digite o nome do cavalo ${cavalos.nome.length + 1}`;
+        }
+    }
+
+    
+    var total = 90;
+
+    function correr() {
+        div_qtd_voltas.style.display = 'none';
+        div_voltas.style.display = 'flex';
+        total = (total / ipt_qtd_cavalos.value) / ipt_voltas.value
+        cavs = ipt_qtd_cavalos.value;
+        qtd_dos_cavalos = ipt_qtd_cavalos.value;
+        corrida();
+    }
+
+    var cavs = 0;
+    var volta = 1
+    var cont = 1;
+
+    function corrida() {
+        var qtdCavalo = ipt_qtd_cavalos.value;
+        var nomeCavalo = ipt_nome_cavalos.value;
+        var qtdCavalo = ipt_qtd_cavalos.value;
+        var qtdVoltas = ipt_voltas.value;
+        var nCavalo = 0;
+
+        validacoes(ipt_nome_cavalos, qtdCavalo, qtdVoltas);
+
+        if (erro == false) {
+
+            if (volta <= qtdVoltas) {
+                div_msg.innerHTML = `<h1>Volta ${volta}</h1>`
+
+                volta++
+
+                for (i = 0; i < cavalos.nome.length; i++) {
+                    var aleatorio = Math.random() * 2 + 7;
+
+
+                    if (cavalos.tmpTotal[i] != undefined) {
+                        cavalos.tmpTotal[i] = aleatorio + cavalos.tmpTotal[i];
+                    } else {
+                        cavalos.tmpTotal[i] = aleatorio;
+                    }
+
+                    if (i == 0) {
+                        cav1.push((cavalos.tmpTotal[i]).toFixed(3));
+                    } else if (i == 1) {
+                        cav2.push((cavalos.tmpTotal[i]).toFixed(3));
+                    } else if (i == 2) {
+                        cav3.push((cavalos.tmpTotal[i]).toFixed(3));
+                    } else if (i == 3) {
+                        cav4.push((cavalos.tmpTotal[i]).toFixed(3));
+                    } else if (i == 4) {
+                        cav5.push((cavalos.tmpTotal[i]).toFixed(3));
+                    } else {
+                        cav6.push((cavalos.tmpTotal[i]).toFixed(3));
+                    }
+
+                }
+                div_grafico.innerHTML = "";
+
+                podio.posicoes.length = 0
+                podio.idCavalo.length = 0
+
+                for (c = 0; c < cavalos.tmpTotal.length; c++) {
+                    podio.tmp[c] = cavalos.tmpTotal[c];
+                    console.log(`podio  ${podio.tmp}`);
+                }
+
+                for (let j = 0; j < podio.tmp.length; j++) {
+                    var menorTempo = 100;
+                    var idCavalo = 0;
+
+                    for (let y = 0; y < podio.tmp.length; y++) {
+                        if (podio.tmp[y] < menorTempo) {
+                            menorTempo = podio.tmp[y];
+                            idCavalo = y;
+                        }
+                    }
+
+                    if (menorTempo < 100) {
+                        podio.posicoes.push(menorTempo);
+                        podio.idCavalo.push(idCavalo);
+                    }
+
+                    delete podio.tmp[podio.tmp.indexOf(menorTempo)];
+
+                    if (podio.posicoes[j] != undefined) {
+                        div_grafico.innerHTML += `<div class="linha">
+                            <p>
+                                Tempo: ${podio.posicoes[j].toFixed(2)}- Id: ${podio.idCavalo[j]} - Posição ${j + 1}°
+                            </p>
+                            <div class='divLinha'>
+                            <hr>
+                            <br>
+                            <img style='right:${(total * qtd_dos_cavalos)*cont}%' class='imgCavalos' src='img/${cavalos.tipo[podio.idCavalo[j]]}'>
+                            <div>
+                            </div>`;
+                        qtd_dos_cavalos--;
+                        if(qtd_dos_cavalos <= 0){
+                            qtd_dos_cavalos = cavs
+                        }
+                    }
+                }
+                cont++
+                div_grafico.innerHTML += `<p>Diferença ${(podio.posicoes[0] - podio.posicoes[1]).toFixed(2)}</p>`;
+                div_grafico.innerHTML += `<p>Podio 1°: ${cavalos.nome[podio.idCavalo[0]]} - 2°: ${cavalos.nome[podio.idCavalo[1]]} - 3°: ${cavalos.nome[podio.idCavalo[2]]}</p>`;
+            } else {
+                fim()
+            }
+
+            div_qtd_voltas.style.display = 'none';
+            div_grafico.style.display = 'flex';
+        }
+    }
+    function fim() {
+        div_fim.style.display = 'flex';
+        div_voltas.style.display = 'none';
+        
+        div_fim.innerHTML += `<h1> O VENCEDOR FOI ${cavalos.nome[podio.idCavalo[0]]}!</h1>
+        <img src="img/podio.png" alt="">
+        <img src="img/${cavalos.tipo[podio.idCavalo[0]]}" class='imgCavalos' alt="">
+        `
+    }
+
+    // PRECISAMOS FINALIZAR ESSA PARTE DO PROJETO: Encerramento do Turfe – Dê um encerramento elegante para o Turfe Amigo, mostre uma nova página, tenha nessa página três imagens de cavalo, uma para cada cavalo do podium. Apresente o resultado de cada cavalo, da última volta para a primeira. De alguma forma dê destaque ao cavalo campeão.  
+</script>
